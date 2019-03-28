@@ -86,7 +86,7 @@ class (Numeric t,
 instance Field Double where
     svd' = svdRd
     thinSVD' = thinSVDRd
-    sv' = svR
+    sv' = svRd
     luPacked' = luR
     luSolve' (l_u,perm) = lusR l_u perm
     linearSolve' = linearSolveR                 -- (luSolve . luPacked) ??
