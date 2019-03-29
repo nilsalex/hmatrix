@@ -541,7 +541,7 @@ int eig_l_S(int wantV,DVEC(s),ODMAT(v)) {
 
 int dsyevd_(char *jobz, char *uplo, integer *n, doublereal *a,
 	integer *lda, doublereal *w, doublereal *work, integer *lwork,
-	integer *info);
+	doublereal *iwork, integer *liwork, integer *info);
 
 int eig_l_Sd(int wantV,DVEC(s),ODMAT(v)) {
     integer n = sn;
@@ -549,25 +549,32 @@ int eig_l_Sd(int wantV,DVEC(s),ODMAT(v)) {
     char jobz = wantV?'V':'N';
     DEBUGMSG("eig_l_Sd");
     integer lwork = -1;
+    integer liwork = -1;
     char uplo = 'U';
     integer res;
-    // ask for optimal lwork
+    // ask for optimal lwork and liwork
     double ans;
+    integer ansi;
     dsyevd_  (&jobz,&uplo,
               &n,vp,&n,
               sp,
               &ans, &lwork,
+              &ansi, &liwork,
               &res);
     lwork = ceil(ans);
+    liwork = ansi;
     double * work = (double*)malloc(lwork*sizeof(double));
+    integer * iwork = (integer*)malloc(liwork*sizeof(integer));
     CHECK(!work,MEM);
     dsyevd_  (&jobz,&uplo,
               &n,vp,&n,
               sp,
               work, &lwork,
+              iwork, &liwork,
               &res);
     CHECK(res,res);
     free(work);
+    free(iwork);
     OK
 }
 
