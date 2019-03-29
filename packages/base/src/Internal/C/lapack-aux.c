@@ -537,6 +537,40 @@ int eig_l_S(int wantV,DVEC(s),ODMAT(v)) {
     OK
 }
 
+// alternative version
+
+int dsyevd_(char *jobz, char *uplo, integer *n, doublereal *a,
+	integer *lda, doublereal *w, doublereal *work, integer *lwork,
+	integer *info);
+
+int eig_l_Sd(int wantV,DVEC(s),ODMAT(v)) {
+    integer n = sn;
+    REQUIRES(vr==n && vc==n, BAD_SIZE);
+    char jobz = wantV?'V':'N';
+    DEBUGMSG("eig_l_Sd");
+    integer lwork = -1;
+    char uplo = 'U';
+    integer res;
+    // ask for optimal lwork
+    double ans;
+    dsyevd_  (&jobz,&uplo,
+              &n,vp,&n,
+              sp,
+              &ans, &lwork,
+              &res);
+    lwork = ceil(ans);
+    double * work = (double*)malloc(lwork*sizeof(double));
+    CHECK(!work,MEM);
+    dsyevd_  (&jobz,&uplo,
+              &n,vp,&n,
+              sp,
+              work, &lwork,
+              &res);
+    CHECK(res,res);
+    free(work);
+    OK
+}
+
 //////////////////// hermitian complex eigensystem ////////////
 
 int zheev_(char *jobz, char *uplo, integer *n, doublecomplex

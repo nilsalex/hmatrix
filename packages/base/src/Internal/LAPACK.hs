@@ -239,7 +239,7 @@ foreign import ccall unsafe "eig_l_R" dgeev :: R ::> R ::> C :> R ::> Ok
 foreign import ccall unsafe "eig_l_G" dggev :: R ::> R ::> C :> R :> R ::> R ::> Ok
 foreign import ccall unsafe "eig_l_C" zgeev :: C ::> C ::> C :> C ::> Ok
 foreign import ccall unsafe "eig_l_GC" zggev :: C ::> C ::> C :> C :> C ::> C ::> Ok
-foreign import ccall unsafe "eig_l_S" dsyev :: CInt -> R :> R ::> Ok
+foreign import ccall unsafe "eig_l_Sd" dsyev :: CInt -> R :> R ::> Ok
 foreign import ccall unsafe "eig_l_H" zheev :: CInt -> R :> C ::> Ok
 
 eigAux f st m = unsafePerformIO $ do
